@@ -119,6 +119,7 @@ def main():
             json.dump(seen_items, f, ensure_ascii=False, indent=4)
     else:
         print("No new Items was found")
+        send_message("No new Items was found")
 
 
 if __name__ == "__main__":

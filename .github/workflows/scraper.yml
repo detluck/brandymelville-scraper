@@ -2,7 +2,7 @@ name: Brandy Scraper
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "22 */2 * * *"
   workflow_dispatch:
 
 jobs:
