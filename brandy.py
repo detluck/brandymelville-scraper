@@ -1,3 +1,4 @@
+from enum import unique
 import requests
 import cloudscraper
 import json
@@ -8,7 +9,10 @@ import sys
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
 
-URL = "https://eu.brandymelville.com/collections/just-in"
+URLS = [
+    "https://eu.brandymelville.com/collections/just-in",
+    "https://eu.brandymelville.com/collections/clothing-tops",
+]
 SEEN_ITEMS_FILE = "known_produkts.json"
 
 if not BOT_TOKEN or not CHAT_ID:
@@ -45,13 +49,10 @@ def send_message(message):
         print(f"failed to connect: {e}")
 
 
-def get_items():
-    scraper = cloudscraper.create_scraper(
-        browser={"browser": "chrome", "platform": "windows", "desktop": True}
-    )
+def get_items(scraper, url):
 
     try:
-        response = scraper.get(URL)
+        response = scraper.get(url)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, "html.parser")
 
@@ -92,14 +93,27 @@ def main():
     else:
         seen_items = []
 
-    current_items = get_items()
+    current_items = []
+    for url in URLS:
+        scraper = cloudscraper.create_scraper(
+            browser={"browser": "chrome", "platform": "windows", "desktop": True}
+        )
+        items = get_items(scraper, url)
+        current_items.extend(items)
 
     if not current_items:
         print("Nothing was found")
         return
 
-    new_items = []
+    urls_now = set()
+    unique_items = []
     for item in current_items:
+        if item["url"] not in urls_now:
+            unique_items.append(item)
+            urls_now.add(item["url"])
+
+    new_items = []
+    for item in unique_items:
         if item["url"] not in seen_items:
             new_items.append(item)
 
