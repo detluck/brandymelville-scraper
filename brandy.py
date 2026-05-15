@@ -1,4 +1,3 @@
-from enum import unique
 import requests
 import cloudscraper
 import json
@@ -12,6 +11,14 @@ CHAT_ID = os.environ.get("CHAT_ID")
 URLS = [
     "https://eu.brandymelville.com/collections/just-in",
     "https://eu.brandymelville.com/collections/clothing-tops",
+    "https://eu.brandymelville.com/collections/clothing-sweatpants-sweatshirts",
+    "https://eu.brandymelville.com/collections/clothing-bottoms",
+    "https://eu.brandymelville.com/collections/bottom-skirt",
+    "https://eu.brandymelville.com/collections/clothing-sweather",
+    "https://eu.brandymelville.com/collections/clothing-shirt",
+    "https://eu.brandymelville.com/collections/clothing-dresses",
+    "https://eu.brandymelville.com/collections/clothing-yoga-pant",
+    "https://eu.brandymelville.com/collections/stripes",
 ]
 SEEN_ITEMS_FILE = "known_produkts.json"
 
