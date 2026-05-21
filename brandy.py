@@ -6,7 +6,8 @@ import os
 import sys
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
-CHAT_ID = os.environ.get("CHAT_ID")
+CHAT_IDS_str = os.environ.get("CHAT_ID", "[]")
+CHAT_ID = json.loads(CHAT_IDS_str)
 
 URLS = [
     "https://eu.brandymelville.com/collections/just-in",
@@ -29,31 +30,33 @@ if not BOT_TOKEN or not CHAT_ID:
 
 def send_photo(photo_url, message):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
-    data = {
-        "chat_id": CHAT_ID,
-        "photo": photo_url,
-        "caption": message,
-        "parse_mode": "HTML",
-    }
+    for id in CHAT_ID:
+        data = {
+            "chat_id": id,
+            "photo": photo_url,
+            "caption": message,
+            "parse_mode": "HTML",
+        }
 
-    try:
-        response = requests.post(url, data=data)
-        if response.status_code != 200:
-            print(f"Error by sending photo: {response.text}")
-    except Exception as e:
-        print(f"failed to connect: {e}")
+        try:
+            response = requests.post(url, data=data)
+            if response.status_code != 200:
+                print(f"Error by sending photo: {response.text}")
+        except Exception as e:
+            print(f"failed to connect: {e}")
 
 
 def send_message(message):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    data = {"chat_id": CHAT_ID, "text": message, "parse_mode": "HTML"}
+    for id in CHAT_ID:
+        data = {"chat_id": id, "text": message, "parse_mode": "HTML"}
 
-    try:
-        response = requests.post(url, data=data)
-        if response.status_code != 200:
-            print(f"Error by sending message: {response.text}")
-    except Exception as e:
-        print(f"failed to connect: {e}")
+        try:
+            response = requests.post(url, data=data)
+            if response.status_code != 200:
+                print(f"Error by sending message: {response.text}")
+        except Exception as e:
+            print(f"failed to connect: {e}")
 
 
 def get_items(scraper, url):
